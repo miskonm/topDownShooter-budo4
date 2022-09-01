@@ -15,5 +15,11 @@ namespace TDS.Game.Player
         {
             _animator.SetFloat("Speed", speed);
         }
+
+        public void PlayDeath()
+        {
+            Debug.LogError($"Player dead!");
+            // _animator.SetTrigger("Death");
+        }
     }
 }
