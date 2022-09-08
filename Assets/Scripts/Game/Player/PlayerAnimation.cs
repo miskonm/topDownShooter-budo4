@@ -18,7 +18,7 @@ namespace TDS.Game.Player
 
         public void PlayDeath()
         {
-            Debug.LogError($"Player dead!");
+            Debug.LogError("Player dead!");
             // _animator.SetTrigger("Death");
         }
     }

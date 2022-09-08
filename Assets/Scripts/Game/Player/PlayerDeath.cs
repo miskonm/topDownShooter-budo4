@@ -20,7 +20,7 @@ namespace TDS.Game.Player
         {
             if (IsDead || hp > 0)
                 return;
-            
+
             IsDead = true;
             _playerAnimation.PlayDeath();
             _playerMovement.enabled = false;

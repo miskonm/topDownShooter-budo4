@@ -9,16 +9,16 @@ namespace TDS.Game.Player
         [SerializeField] private int _startHp;
         [SerializeField] private int _maxHp;
 
-        public event Action<int> OnChanged;
-
-        public int CurrentHp { get; private set; }
-        public int MaxHp => _maxHp;
-
         private void Awake()
         {
             CurrentHp = _startHp;
             OnChanged?.Invoke(CurrentHp);
         }
+
+        public event Action<int> OnChanged;
+
+        public int CurrentHp { get; private set; }
+        public int MaxHp => _maxHp;
 
         public void ApplyDamage(int damage)
         {

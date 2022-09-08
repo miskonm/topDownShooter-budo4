@@ -15,7 +15,7 @@ namespace TDS.Game.Objects
 
         private void LateUpdate()
         {
-            Vector3 followPosition = _follow.position;
+            var followPosition = _follow.position;
             followPosition.z = _cachedTransform.position.z;
             _cachedTransform.position = followPosition;
         }

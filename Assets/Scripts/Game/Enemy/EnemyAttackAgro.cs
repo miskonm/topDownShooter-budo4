@@ -6,9 +6,7 @@ namespace TDS.Game.Enemy
     {
         [SerializeField] private TriggerObserver _triggerObserver;
         [SerializeField] private EnemyAttack _attack;
-        [SerializeField] private EnemyMovement _enemyMovement;
-
-        private bool _isInRange;
+        [SerializeField] private EnemyFollow _follow;
 
         private void Start()
         {
@@ -16,22 +14,16 @@ namespace TDS.Game.Enemy
             _triggerObserver.OnExited += OnExited;
         }
 
-        private void Update()
-        {
-            if (_isInRange)
-                _attack.Attack();
-        }
-
         private void OnEntered(Collider2D col)
         {
-            _isInRange = true;
-            _enemyMovement.enabled = false;
+            _follow.Deactivate();
+            _attack.Activate();
         }
 
         private void OnExited(Collider2D col)
         {
-            _isInRange = false;
-            _enemyMovement.enabled = true;
+            _attack.Deactivate();
+            _follow.Activate();
         }
     }
 }
