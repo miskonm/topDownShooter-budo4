@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ namespace TDS.Game.Objects
     {
         [SerializeField] private float _speed = 10f;
         [SerializeField] private float _lifeTime = 3f;
+        [SerializeField] private int _damage = 1;
+        
 
         private Rigidbody2D _rb;
 
@@ -17,6 +20,15 @@ namespace TDS.Game.Objects
             _rb.velocity = transform.up * _speed;
 
             StartCoroutine(LifeTimeTimer());
+        }
+
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            if (col.CompareTag("Enemy"))
+            {
+                IHealth health = col.gameObject.GetComponentInParent<IHealth>();
+                health.ApplyDamage(_damage);
+            }
         }
 
         private IEnumerator LifeTimeTimer()

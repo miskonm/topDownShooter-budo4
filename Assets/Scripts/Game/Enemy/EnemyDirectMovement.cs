@@ -46,19 +46,20 @@ namespace TDS.Game.Enemy
 
         private void MoveToTarget()
         {
-            var direction = (_target.position - _cachedTransform.position).normalized;
+            Vector3 direction = (_target.position - _cachedTransform.position).normalized;
             SetVelocity(direction * _speed);
         }
 
         private void RotateToTarget()
         {
-            var direction = _target.position - _cachedTransform.position;
+            Vector3 direction = _target.position - _cachedTransform.position;
             _cachedTransform.up = direction;
         }
 
         private void SetVelocity(Vector2 velocity)
         {
             _rb.velocity = velocity;
+            SetAnimationSpeed(velocity.magnitude);
         }
     }
 }
