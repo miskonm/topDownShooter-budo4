@@ -23,7 +23,7 @@ namespace TDS.Game
             }
         }
 
-        private void Construct(IHealth health)
+        public void Construct(IHealth health)
         {
             _health = health;
 
