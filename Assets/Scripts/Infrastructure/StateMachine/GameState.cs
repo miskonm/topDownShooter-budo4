@@ -1,40 +1,63 @@
 using TDS.Game.InputService;
+using TDS.Game.Npc;
 using TDS.Game.Player;
+using TDS.Infrastructure.LoadingScreen;
 using TDS.Infrastructure.SceneLoader;
 using UnityEngine;
 
 namespace TDS.Infrastructure.StateMachine
 {
-    public class GameState : BaseState
+    public class GameState : BaseExitableState, IPayloadState<string>
     {
+        private ISceneLoadService _sceneLoadService;
+        private ILoadingScreenService _loadingScreenService;
+        private INpcService _npcService;
+
         public GameState(IGameStateMachine gameStateMachine) : base(gameStateMachine)
         {
         }
 
-        public override void Enter()
+        public void Enter(string sceneName)
         {
-            // TODO: Show loading screen
-            ISceneLoadService sceneLoadService = Services.Container.Get<ISceneLoadService>();
-            sceneLoadService.Load("GameScene", OnSceneLoaded);
+            Services.Container.Get(out _sceneLoadService);
+            Services.Container.Get(out _loadingScreenService);
+
+            _loadingScreenService.ShowScreen();
+            _sceneLoadService.Load(sceneName, OnSceneLoaded);
         }
 
         public override void Exit()
         {
+            Dispose();
             UnRegisterLocalServices();
+
+            _loadingScreenService = null;
+            _sceneLoadService = null;
+        }
+
+        private void Dispose()
+        {
+            _npcService.Dispose();
         }
 
         private void UnRegisterLocalServices()
         {
             Services.Container.UnRegister<IInputService>();
+            Services.Container.UnRegisterAndNullRef(ref _npcService);
         }
 
         private void OnSceneLoaded()
         {
             // TODO: Init all local services
             RegisterLocalServices();
-            
-            
-            // TODO: Hide loading screen
+
+            Initialize();
+            _loadingScreenService.HideScreen();
+        }
+
+        private void Initialize()
+        {
+            _npcService.Init();
         }
 
         private void RegisterLocalServices()
@@ -42,6 +65,7 @@ namespace TDS.Infrastructure.StateMachine
             PlayerMovement playerMovement = Object.FindObjectOfType<PlayerMovement>();
             RegisterInputService(playerMovement);
             InitPlayerMovement(playerMovement);
+            _npcService = Services.Container.Register<INpcService>(new NpcService());
         }
 
         private void RegisterInputService(PlayerMovement playerMovement)

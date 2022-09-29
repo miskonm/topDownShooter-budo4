@@ -1,3 +1,4 @@
+using Lean.Pool;
 using UnityEngine;
 
 namespace TDS.Game.Player
@@ -34,7 +35,7 @@ namespace TDS.Game.Player
         private void Attack()
         {
             _playerAnimation.PlayShoot();
-            Instantiate(_bulletPrefab, _bulletSpawnPointTransform.position, _cachedTransform.rotation);
+            LeanPool.Spawn(_bulletPrefab, _bulletSpawnPointTransform.position, _cachedTransform.rotation);
             _delayTimer = _fireDelay;
         }
 

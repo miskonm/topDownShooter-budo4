@@ -27,6 +27,9 @@ namespace TDS.Game.Player
 
         private void Update()
         {
+            if (_inputService == null)
+                return;
+            
             Move();
             Rotate();
         }

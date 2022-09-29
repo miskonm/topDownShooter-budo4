@@ -7,6 +7,7 @@ namespace TDS.Infrastructure.SceneLoader
     {
         public void Load(string sceneName, Action completeCallback)
         {
+            // TODO: Fix one frame
             SceneManager.LoadScene(sceneName);
             completeCallback?.Invoke();
         }

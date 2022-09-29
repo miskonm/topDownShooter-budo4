@@ -1,4 +1,6 @@
+using TDS.Infrastructure.LoadingScreen;
 using TDS.Infrastructure.SceneLoader;
+using TDS.Infrastructure.Utility;
 using UnityEngine;
 
 namespace TDS.Infrastructure.StateMachine
@@ -14,22 +16,20 @@ namespace TDS.Infrastructure.StateMachine
             Debug.Log($"In BootstrapState");
 
             RegisterAllGlobalServices();
-            ISceneLoadService sceneLoadService = Services.Container.Get<ISceneLoadService>();
-            sceneLoadService.Load("MenuScene", OnSceneLoaded);
+            StateMachine.Enter<MenuState>();
         }
 
         public override void Exit()
         {
         }
 
-        private void OnSceneLoaded()
-        {
-            StateMachine.Enter<MenuState>();
-        }
-
         private void RegisterAllGlobalServices()
         {
-            Services.Container.Register<ISceneLoadService>(new SyncSceneLoadService());
+            Services.Container.RegisterMono<ICoroutineRunner>(typeof(CoroutineRunner));
+            Services.Container.Register<ISceneLoadService>(
+                new AsyncSceneLoadService(Services.Container.Get<ICoroutineRunner>()));
+            
+            Services.Container.Register<ILoadingScreenService>(new LoadingScreenService());
         }
     }
 }

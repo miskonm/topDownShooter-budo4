@@ -1,15 +1,11 @@
 namespace TDS.Infrastructure.StateMachine
 {
-    public abstract class BaseState : IState
+    public abstract class BaseState : BaseExitableState, IState
     {
-        protected IGameStateMachine StateMachine { get; }
-
-        protected BaseState(IGameStateMachine gameStateMachine)
+        protected BaseState(IGameStateMachine gameStateMachine) : base(gameStateMachine)
         {
-            StateMachine = gameStateMachine;
         }
-        
+
         public abstract void Enter();
-        public abstract void Exit();
     }
 }

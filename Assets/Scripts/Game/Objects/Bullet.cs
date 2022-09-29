@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Lean.Pool;
 using UnityEngine;
 
 namespace TDS.Game.Objects
@@ -10,16 +11,30 @@ namespace TDS.Game.Objects
         [SerializeField] private float _speed = 10f;
         [SerializeField] private float _lifeTime = 3f;
         [SerializeField] private int _damage = 1;
-        
 
         private Rigidbody2D _rb;
+        private IEnumerator _lifeTimeRoutine;
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
+        }
+
+        private void OnEnable()
+        {
             _rb.velocity = transform.up * _speed;
 
-            StartCoroutine(LifeTimeTimer());
+            _lifeTimeRoutine = LifeTimeTimer();
+            StartCoroutine(_lifeTimeRoutine);
+        }
+
+        private void OnDisable()
+        {
+            if (_lifeTimeRoutine != null)
+            {
+                StopCoroutine(_lifeTimeRoutine);
+                _lifeTimeRoutine = null;
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D col)
@@ -28,6 +43,7 @@ namespace TDS.Game.Objects
             {
                 IHealth health = col.gameObject.GetComponentInParent<IHealth>();
                 health.ApplyDamage(_damage);
+                Despawn();
             }
         }
 
@@ -35,7 +51,10 @@ namespace TDS.Game.Objects
         {
             yield return new WaitForSeconds(_lifeTime);
 
-            Destroy(gameObject);
+            Despawn();
         }
+
+        private void Despawn() =>
+            LeanPool.Despawn(gameObject);
     }
 }
