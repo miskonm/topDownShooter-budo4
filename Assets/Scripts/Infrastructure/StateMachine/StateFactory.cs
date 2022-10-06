@@ -1,3 +1,4 @@
+using System;
 using TDS.Game.InputService;
 using TDS.Game.Level;
 using TDS.Game.LevelCompletion;
@@ -6,7 +7,6 @@ using TDS.Game.Npc;
 using TDS.Infrastructure.LoadingScreen;
 using TDS.Infrastructure.Persistant;
 using TDS.Infrastructure.SceneLoader;
-using UnityEngine;
 
 namespace TDS.Infrastructure.StateMachine
 {
@@ -14,25 +14,13 @@ namespace TDS.Infrastructure.StateMachine
     {
         public static TState Create<TState>() where TState : class, IExitableState
         {
-            var stateType = typeof(TState);
-            if (stateType == typeof(BootstrapState))
+            return typeof(TState).Name switch
             {
-                return CreateBootstrapState<TState>();
-            }
-
-            if (stateType == typeof(MenuState))
-            {
-                return CreateMenuState<TState>();
-            }
-
-            if (stateType == typeof(GameState))
-            {
-                return CreateGameState<TState>();
-            }
-
-            Debug.LogError($"No logic for state '{stateType}'");
-
-            return null;
+                nameof(BootstrapState) => CreateBootstrapState<TState>(),
+                nameof(MenuState) => CreateMenuState<TState>(),
+                nameof(GameState) => CreateGameState<TState>(),
+                _ => null
+            };
         }
 
         private static TState CreateGameState<TState>() where TState : class, IExitableState

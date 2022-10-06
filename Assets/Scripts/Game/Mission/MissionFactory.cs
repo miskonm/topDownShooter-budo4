@@ -1,3 +1,5 @@
+using System;
+using TDS.Game.Mission.Complex;
 using TDS.Game.Mission.KillOneEnemy;
 using TDS.Game.Npc;
 using TDS.Infrastructure;
@@ -19,17 +21,13 @@ namespace TDS.Game.Mission
 
         public static Mission Create(MissionCondition condition)
         {
-            if (condition is KillAllEnemiesMissionCondition killAllEnemiesMissionCondition)
+            return condition switch
             {
-                return CreateKillAllEnemiesMission(killAllEnemiesMissionCondition);
-            }
-
-            if (condition is KillOneEnemyMissionCondition killOneEnemyMissionCondition)
-            {
-                return CreateKillOneEnemyMission(killOneEnemyMissionCondition);
-            }
-
-            return null;
+                ComplexMissionCondition complexMissionCondition => throw new NotImplementedException(), // TODO
+                KillAllEnemiesMissionCondition killAllCondition => CreateKillAllEnemiesMission(killAllCondition),
+                KillOneEnemyMissionCondition killOneCondition => CreateKillOneEnemyMission(killOneCondition),
+                _ => null
+            };
         }
 
         private static KillAllEnemiesMission CreateKillAllEnemiesMission(
