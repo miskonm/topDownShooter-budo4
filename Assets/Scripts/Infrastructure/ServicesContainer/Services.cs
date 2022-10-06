@@ -29,12 +29,12 @@ namespace TDS.Infrastructure
             return implementation;
         }
 
-        public void RegisterMono<TService>(Type serviceType) where TService : class, IService
+        public TService RegisterMono<TService>(Type serviceType) where TService : class, IService
         {
             Component service = new GameObject(serviceType.Name).AddComponent(serviceType);
             Object.DontDestroyOnLoad(service);
             _components.Add(typeof(TService), service);
-            Register<TService>(service as TService);
+            return Register<TService>(service as TService);
         }
 
         public TService Get<TService>() where TService : class, IService

@@ -1,7 +1,11 @@
 using TDS.Game.InputService;
+using TDS.Game.Level;
+using TDS.Game.LevelCompletion;
+using TDS.Game.Mission;
 using TDS.Game.Npc;
 using TDS.Game.Player;
 using TDS.Infrastructure.LoadingScreen;
+using TDS.Infrastructure.Persistant;
 using TDS.Infrastructure.SceneLoader;
 using UnityEngine;
 
@@ -9,18 +13,34 @@ namespace TDS.Infrastructure.StateMachine
 {
     public class GameState : BaseExitableState, IPayloadState<string>
     {
-        private ISceneLoadService _sceneLoadService;
-        private ILoadingScreenService _loadingScreenService;
-        private INpcService _npcService;
+        private readonly ISceneLoadService _sceneLoadService;
+        private readonly ILoadingScreenService _loadingScreenService;
+        private readonly INpcService _npcService;
+        private readonly IInputService _inputService;
+        private readonly IMissionService _missionService;
+        private readonly ILevelSettingsService _levelSettingsService;
+        private readonly ILevelCompletionService _levelCompletionService;
+        private readonly IPersistantService _persistantService;
 
-        public GameState(IGameStateMachine gameStateMachine) : base(gameStateMachine)
+        public GameState(IGameStateMachine gameStateMachine, ISceneLoadService sceneLoadService,
+            ILoadingScreenService loadingScreenService, INpcService npcService, IInputService inputService,
+            IMissionService missionService, ILevelSettingsService levelSettingsService,
+            ILevelCompletionService levelCompletionService, IPersistantService persistantService) : base(gameStateMachine)
         {
+            _sceneLoadService = sceneLoadService;
+            _loadingScreenService = loadingScreenService;
+            _npcService = npcService;
+            _inputService = inputService;
+            _missionService = missionService;
+            _levelSettingsService = levelSettingsService;
+            _levelCompletionService = levelCompletionService;
+            _persistantService = persistantService;
         }
 
         public void Enter(string sceneName)
         {
-            Services.Container.Get(out _sceneLoadService);
-            Services.Container.Get(out _loadingScreenService);
+            _levelSettingsService.SetCurrentLevelSettings(sceneName);
+            SaveCurrentScene(sceneName);
 
             _loadingScreenService.ShowScreen();
             _sceneLoadService.Load(sceneName, OnSceneLoaded);
@@ -29,54 +49,51 @@ namespace TDS.Infrastructure.StateMachine
         public override void Exit()
         {
             Dispose();
-            UnRegisterLocalServices();
+        }
 
-            _loadingScreenService = null;
-            _sceneLoadService = null;
+        private void SaveCurrentScene(string sceneName)
+        {
+            PersistantData data = _persistantService.Data;
+            data.LevelData.CurrentSceneId = sceneName;
+            _persistantService.Save();
         }
 
         private void Dispose()
         {
             _npcService.Dispose();
-        }
-
-        private void UnRegisterLocalServices()
-        {
-            Services.Container.UnRegister<IInputService>();
-            Services.Container.UnRegisterAndNullRef(ref _npcService);
+            _missionService.Dispose();
+            _levelCompletionService.Dispose();
         }
 
         private void OnSceneLoaded()
         {
-            // TODO: Init all local services
-            RegisterLocalServices();
-
             Initialize();
             _loadingScreenService.HideScreen();
         }
 
         private void Initialize()
         {
-            _npcService.Init();
-        }
-
-        private void RegisterLocalServices()
-        {
+            InitHealth();
             PlayerMovement playerMovement = Object.FindObjectOfType<PlayerMovement>();
-            RegisterInputService(playerMovement);
-            InitPlayerMovement(playerMovement);
-            _npcService = Services.Container.Register<INpcService>(new NpcService());
+            _inputService.Init(Camera.main, playerMovement.transform);
+            playerMovement.Construct(_inputService);
+            _npcService.Init();
+
+            _missionService.Init();
+            _levelCompletionService.Init();
         }
 
-        private void RegisterInputService(PlayerMovement playerMovement)
+        private void InitHealth()
         {
-            Services.Container.Register<IInputService>(
-                new StandaloneInputService(Camera.main, playerMovement.transform));
-        }
-
-        private void InitPlayerMovement(PlayerMovement playerMovement)
-        {
-            playerMovement.Construct(Services.Container.Get<IInputService>());
+            // PlayerHp playerHp = Object.FindObjectOfType<PlayerHp>();
+            // PersistantPlayerData playerData = _persistantService.Data.PlayerData;
+            //
+            // if (!playerData.IsSaved)
+            // {
+            //     return;
+            // }
+            //
+            // playerHp.Init(playerData.CurrentHp);
         }
     }
 }

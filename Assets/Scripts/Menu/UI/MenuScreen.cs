@@ -1,5 +1,5 @@
 using TDS.Infrastructure;
-using TDS.Infrastructure.StateMachine;
+using TDS.Infrastructure.StartLevel;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +9,7 @@ namespace TDS.Menu.UI
     {
         [SerializeField] private Button _playButton;
 
-        private IGameStateMachine _stateMachine;
+        private IStartLevelService _startLevelService;
 
         private void Awake()
         {
@@ -18,12 +18,12 @@ namespace TDS.Menu.UI
 
         private void Start()
         {
-            _stateMachine = Services.Container.Get<IGameStateMachine>();
+            _startLevelService = Services.Container.Get<IStartLevelService>();
         }
 
         private void OnPlayButtonClicked()
         {
-            _stateMachine.Enter<GameState, string>("GameScene");
+            _startLevelService.StartGame();
         }
     }
 }

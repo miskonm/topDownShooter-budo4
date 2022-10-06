@@ -6,6 +6,7 @@ namespace TDS.Game.Enemy
     {
         private static readonly int IsAttack = Animator.StringToHash("IsAttack");
         private static readonly int Speed = Animator.StringToHash("Speed");
+        private static readonly int IsDead = Animator.StringToHash("IsDead");
 
         [SerializeField] private Animator _animator;
 
@@ -14,5 +15,8 @@ namespace TDS.Game.Enemy
 
         public void SetSpeed(float speed) =>
             _animator.SetFloat(Speed, speed);
+
+        public void PlayDeath() =>
+            _animator.SetBool(IsDead, true);
     }
 }

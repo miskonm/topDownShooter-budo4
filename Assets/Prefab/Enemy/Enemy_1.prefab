@@ -180,6 +180,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f19a8f29c3432b9ad472cefb99fa04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1825151342977248292 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 253845826424262970, guid: 8fbd33b5b2f104cf19ad9c34179a1e32, type: 3}
+  m_PrefabInstance: {fileID: 1932583098898693406}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4752300128724037558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c14cb5da5e15467592d671ca44899357, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!58 &2063582758013834334 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 464639883370998080, guid: 8fbd33b5b2f104cf19ad9c34179a1e32, type: 3}
+  m_PrefabInstance: {fileID: 1932583098898693406}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4752300128724037558 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6566923215554482856, guid: 8fbd33b5b2f104cf19ad9c34179a1e32, type: 3}
@@ -258,6 +274,25 @@ MonoBehaviour:
   _layerMask:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &5477271305414161080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4752300128724037558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab43c5f8c9174823afc858a61853d67c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyHp: {fileID: 1825151342977248292}
+  _animation: {fileID: 1817111562388141868}
+  _enemyMovement: {fileID: 8648399780410175930}
+  _colliders:
+  - {fileID: 7950409528981621348}
+  - {fileID: 6519482686978947204}
+  - {fileID: 2063582758013834334}
 --- !u!1 &5396366033575395429 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5778773932198428027, guid: 8fbd33b5b2f104cf19ad9c34179a1e32, type: 3}
@@ -276,3 +311,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meleeAttack: {fileID: 9118732817649826431}
+--- !u!58 &6519482686978947204 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 4659027555703571866, guid: 8fbd33b5b2f104cf19ad9c34179a1e32, type: 3}
+  m_PrefabInstance: {fileID: 1932583098898693406}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &7950409528981621348 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8395955731887765370, guid: 8fbd33b5b2f104cf19ad9c34179a1e32, type: 3}
+  m_PrefabInstance: {fileID: 1932583098898693406}
+  m_PrefabAsset: {fileID: 0}
